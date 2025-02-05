@@ -1,0 +1,24 @@
+<mvc:View
+    controllerName="com.logali.invoices.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Shell id="shell">
+        <App id="app">
+            <pages>
+                <Page title="{i18n>title}">
+                    <Panel headerText="{i18n>helloPanel}">
+                        <content>
+                            <Button
+                                text="{i18n>helloButton}"
+                                press="onShowHello"
+                            />
+                            <Input value="{view>/recipient/name}"/>
+                        </content>
+                    </Panel>
+                </Page>
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>
+
