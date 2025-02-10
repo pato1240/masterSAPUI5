@@ -7,15 +7,9 @@
         <App id="app">
             <pages>
                 <Page title="{i18n>title}">
-                    <Panel headerText="{i18n>helloPanel}">
-                        <content>
-                            <Button
-                                text="{i18n>helloButton}"
-                                press="onShowHello"
-                            />
-                            <Input value="{view>/recipient/name}"/>
-                        </content>
-                    </Panel>
+                    <mvc:XMLView id="helloPanel"
+                                  viewName="com.logali.invoices.view.HelloPanel"
+                                  type="XML"/>
                 </Page>
             </pages>
         </App>
