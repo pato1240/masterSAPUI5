@@ -10,6 +10,9 @@
                     <mvc:XMLView id="helloPanel"
                                   viewName="com.logali.invoices.view.HelloPanel"
                                   type="XML"/>
+                   <mvc:XMLView id="invoicesList"
+                                viewName="com.logali.invoices.view.InvoicesList"
+                                type="XML"/>
                 </Page>
             </pages>
         </App>

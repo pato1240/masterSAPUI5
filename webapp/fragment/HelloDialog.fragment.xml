@@ -4,9 +4,14 @@
 >
     <Dialog
         id="helloDialog"
-        title="Hello{view>/recipient/name}"
+        title="Hello {view>/recipient/name}"
     >
-        <content />
+        <content>
+            <core:Icon
+                src="sap-icon://hello-world"
+                size="5rem"
+            />
+        </content>
 
         <beginButton>
             <Button

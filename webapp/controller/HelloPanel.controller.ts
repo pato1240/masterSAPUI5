@@ -12,7 +12,7 @@ export default class HelloPanel extends Controller {
 
     private dialog: Dialog
 
-    onInit(): void | undefined {
+    public onInit(): void | undefined {
 
     }
 

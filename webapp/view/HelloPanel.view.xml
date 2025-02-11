@@ -17,6 +17,7 @@
             />
             <Button
                 text="{i18n>helloDialogBut}"
+                icon="sap-icon://action"
                 press="onOpenDialog"
                 class="sapUiSmallMarginEnd"
             />

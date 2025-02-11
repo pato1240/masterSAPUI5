@@ -1,0 +1,31 @@
+<mvc:View
+    controllerName="com.logali.invoices.controller.InvoicesList"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+>
+    <List
+        id="list"
+        headerText="{i18n>invoicesListTitle}"
+        class="sapUiResponsiveMargin"
+        items="{invoices>/Invoices}"
+        width="auto"
+    >
+        <items>
+            <ObjectListItem
+                title="{invoices>Quantity} x {invoices>ProductName}"
+                number="{
+                    parts: ['invoices>ExtendedPrice',
+                            'currencies>/currency'
+                            ],
+                    type: 'sap.ui.model.type.Currency',
+                    formatOptions: {
+                        preserveDecimals: false,
+                        decimals: 2,            
+                        showMeasure: false
+                        }
+                }"
+                numberUnit="{currencies>/currency}"
+            />
+        </items>
+    </List>
+</mvc:View>
