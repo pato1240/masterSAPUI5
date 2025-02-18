@@ -1,6 +1,7 @@
 <mvc:View
     controllerName="com.logali.invoices.controller.InvoicesList"
     xmlns="sap.m"
+    xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc"
 >
     <List
@@ -18,14 +19,32 @@
                             'currencies>/currency'
                             ],
                     type: 'sap.ui.model.type.Currency',
-                    formatOptions: {
-                        preserveDecimals: false,
-                        decimals: 2,            
-                        showMeasure: false
+                    formatOptions: {      
+                        showMeasure: false,
+                        style: 'short',
+                        roundingMode: 'TOWARDS_ZERO',
+                        decimals: 2
                         }
                 }"
                 numberUnit="{currencies>/currency}"
-            />
+                numberState="{= 
+                (${invoices>ExtendedPrice} >= 00.00 &amp;&amp; ${invoices>ExtendedPrice} &lt;= 9.99)? 'Error' : 
+                (${invoices>ExtendedPrice} >= 10.00 &amp;&amp; ${invoices>ExtendedPrice} &lt;= 19.99)? 'Warning' :
+                (${invoices>ExtendedPrice} >= 20.00 &amp;&amp; ${invoices>ExtendedPrice} &lt;= 39.99)? 'Success' : 'Information'
+                }"
+            >
+                <firstStatus>
+                    <ObjectStatus
+                        core:require="{
+                            MyFormatter: 'com/logali/invoices/model/formatter'
+                        }"
+                        text="{
+                            path: 'invoices>Status',
+                            formatter: 'MyFormatter.statusText.bind($controller)'
+                            }"
+                    />
+                </firstStatus>
+            </ObjectListItem>
         </items>
     </List>
 </mvc:View>
