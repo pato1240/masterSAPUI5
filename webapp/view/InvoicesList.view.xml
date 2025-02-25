@@ -8,14 +8,34 @@
         id="list"
         headerText="{i18n>invoicesListTitle}"
         class="sapUiResponsiveMargin"
-        items="{invoices>/Invoices}"
+        growing="true"
+        growingThreshold="30"
+        growingScrollToLoad="true"
+        items="{
+                path: 'northwind>/Invoices',
+                sorter: {
+                    path: 'ShipperName',
+                    group: true}
+                }"
         width="auto"
     >
+        <headerToolbar>
+            <Toolbar>
+                <Title text="{i18n>invoicesListTitle}" />
+                <ToolbarSpacer />
+                <SearchField
+                    search="onFilter"
+                    width="50%"
+                />
+            </Toolbar>
+        </headerToolbar>
+
         <items>
             <ObjectListItem
-                title="{invoices>Quantity} x {invoices>ProductName}"
+                type="Navigation"
+                title="{northwind>Quantity} x {northwind>ProductName}"
                 number="{
-                    parts: ['invoices>ExtendedPrice',
+                    parts: ['northwind>ExtendedPrice',
                             'currencies>/currency'
                             ],
                     type: 'sap.ui.model.type.Currency',
@@ -28,22 +48,23 @@
                 }"
                 numberUnit="{currencies>/currency}"
                 numberState="{= 
-                (${invoices>ExtendedPrice} >= 00.00 &amp;&amp; ${invoices>ExtendedPrice} &lt;= 9.99)? 'Error' : 
-                (${invoices>ExtendedPrice} >= 10.00 &amp;&amp; ${invoices>ExtendedPrice} &lt;= 19.99)? 'Warning' :
-                (${invoices>ExtendedPrice} >= 20.00 &amp;&amp; ${invoices>ExtendedPrice} &lt;= 39.99)? 'Success' : 'Information'
+                (${northwind>ExtendedPrice} >= 00.00 &amp;&amp; ${northwind>ExtendedPrice} &lt;= 9.99)? 'Error' : 
+                (${northwind>ExtendedPrice} >= 10.00 &amp;&amp; ${northwind>ExtendedPrice} &lt;= 19.99)? 'Warning' :
+                (${northwind>ExtendedPrice} >= 20.00 &amp;&amp; ${northwind>ExtendedPrice} &lt;= 39.99)? 'Success' : 'Information'
                 }"
+                press="onNavToDetails"
             >
-                <firstStatus>
+                <!-- <firstStatus>
                     <ObjectStatus
                         core:require="{
                             MyFormatter: 'com/logali/invoices/model/formatter'
                         }"
                         text="{
-                            path: 'invoices>Status',
+                            path: 'northwind>Status',
                             formatter: 'MyFormatter.statusText.bind($controller)'
                             }"
                     />
-                </firstStatus>
+                </firstStatus> -->
             </ObjectListItem>
         </items>
     </List>

@@ -16,8 +16,15 @@ server:
             - /test-resources
           url: https://ui5.sap.com
         backend:
-          - path: /v2
-            destination: Northwind
+          - url: https://services.odata.org
+            authenticationType: NoAuthentication
+            path: /northwind
+          - url: https://services.odata.org
+            authenticationType: NoAuthentication
+            path: /v2
+          - url: https://services.odata.org/
+            authenticationType: NoAuthentication
+            path: /v2
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -37,6 +44,20 @@ server:
           overridesToOverride: true
         excludePatterns:
           - /Component-preload.js
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        mountPath: /
+        services:
+          - urlPath: /northwind/northwind.svc
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+          - urlPath: /v2/northwind/northwind.svc
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+        annotations: []
 builder:
   customTasks:
     - name: ui5-tooling-transpile-task

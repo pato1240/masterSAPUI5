@@ -1,0 +1,9 @@
+<mvc:View   controllerName="com.logali.invoices.controller.Details"
+            xmlns="sap.m"
+            xmlns:mvc="sap.ui.core.mvc">
+
+    <Page>
+        <ObjectHeader title="{northwind>Quantity} x {northwind>ProductName}" />
+    </Page>
+
+</mvc:View>
