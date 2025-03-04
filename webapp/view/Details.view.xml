@@ -1,9 +1,28 @@
-<mvc:View   controllerName="com.logali.invoices.controller.Details"
-            xmlns="sap.m"
-            xmlns:mvc="sap.ui.core.mvc">
+<mvc:View
+    controllerName="com.logali.invoices.controller.Details"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:rating="com.logali.invoices.control"
+>
+    <Page
+        showNavButton="true"
+        navButtonPress="onNavToBack"
+    >
+        <ObjectHeader title="{northwind>Quantity} x {northwind>ProductName}">
+            <attributes>
+                <ObjectAttribute text="{northwind>ShipName}" />
+                <ObjectAttribute text="{northwind>ShipAdress}" />
+                <ObjectAttribute text="{northwind>ShipCity}" />
+                <ObjectAttribute text="{northwind>ShipPostalCode}" />
+                <ObjectAttribute text="{northwind>ShipCountry}" />
+                <ObjectAttribute text="{northwind>CustomerID}" />
+                <ObjectAttribute text="{northwind>CustomerName}" />
+            </attributes>
+        </ObjectHeader>
 
-    <Page>
-        <ObjectHeader title="{northwind>Quantity} x {northwind>ProductName}" />
+        <rating:ProductRating
+            id="rating"
+            change="onRatingChange"
+        />
     </Page>
-
 </mvc:View>
