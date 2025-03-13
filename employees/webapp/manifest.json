@@ -79,12 +79,31 @@
                     "target": [
                         "TargetMain"
                     ]
+                },
+                {
+                    "name": "RouteDetails",
+                    "pattern": "Employee(ID):?query:",
+                    "target": [
+                        "TargetMain",
+                        "TargetDetail"
+                    ]
                 }
             ],
             "targets": {
+                "TargetContainer":{
+                    "name": "Container"
+                },
                 "TargetMain": {
-                    "id": "Main",
+                    "parent": "TargetContainer",
+                    "controlId": "container",
+                    "controlAggregation": "beginColumnPages",
                     "name": "Main"
+                },
+                "TargetDetail": {
+                    "parent": "TargetContainer",
+                    "controlId": "container",
+                    "controlAggregation": "midColumnPages",
+                    "name": "Details"
                 }
             }
         },

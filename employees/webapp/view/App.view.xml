@@ -6,7 +6,10 @@
     
     <Shell id="shell">
         <App id="app">
-
+            <pages>
+                <mvc:XMLView viewName="com.logali.employees.view.Container"
+                             type="XML"/>
+            </pages>
         </App >
     </Shell>
 
