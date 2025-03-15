@@ -44,9 +44,13 @@
                             visibleInFilterBar="true"
                         >
                             <filterbar:control>
-                                <ComboBox
+                                <MultiComboBox
                                     id="filterCountry"
-                                    items="{countries>/Countries}"
+                                    selectionFinish="onSelectionFinish"
+                                    items="{
+                                        path:'countries>/Countries',
+                                        templateShareable: true
+                                        }"
                                     showSecondaryValues="true"
                                 >
                                     <items>
@@ -56,7 +60,7 @@
                                             additionalText="({countries>code})"
                                         />
                                     </items>
-                                </ComboBox>
+                                </MultiComboBox>
                             </filterbar:control>
                         </filterbar:FilterGroupItem>
                     </filterbar:filterGroupItems>
@@ -70,30 +74,57 @@
                 items="{employees>/Employees}"
                 growing="true"
                 growingScrollToLoad="true"
+                autoPopinMode="true"
             >
                 <headerToolbar>
                     <Toolbar>
                         <Title
-                            text="{i18n>title}"
+                            core:require="{
+                                Formatter: 'com/logali/employees/model/formatter'
+                            }"
+                            text="{
+                                path: 'i18n>title',
+                                formatter: 'Formatter.titleFormatter.bind($controller)'
+                            }"
                             wrapping="true"
                         />
                     </Toolbar>
                 </headerToolbar>
 
                 <columns>
-                    <Column>
+                    <Column
+                        demandPopin="true"
+                        minScreenWidth="Phone"
+                        importance="High"
+                    >
                         <Text text="{i18n>ID}" />
                     </Column>
-                    <Column>
+                    <Column
+                        demandPopin="true"
+                        minScreenWidth="Phone"
+                        importance="High"
+                    >
                         <Text text="{i18n>fullName}" />
                     </Column>
-                    <Column>
+                    <Column
+                        demandPopin="true"
+                        minScreenWidth="Tablet"
+                        importance="Medium"
+                    >
                         <Text text="{i18n>country}" />
                     </Column>
-                    <Column>
+                    <Column
+                        demandPopin="true"
+                        minScreenWidth="Tablet"
+                        importance="Medium"
+                    >
                         <Text text="{i18n>city}" />
                     </Column>
-                    <Column>
+                    <Column
+                        demandPopin="true"
+                        minScreenWidth="Desktop"
+                        importance="Low"
+                    >
                         <Text text="{i18n>postalCode}" />
                     </Column>
                 </columns>

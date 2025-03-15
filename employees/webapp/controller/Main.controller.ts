@@ -1,13 +1,13 @@
 import JSONModel from "sap/ui/model/json/JSONModel";
 import BaseController from "./BaseController";
 import Input from "sap/m/Input";
-import ComboBox from "sap/m/ComboBox";
 import Filter from "sap/ui/model/Filter";
 import FilterOperator from "sap/ui/model/FilterOperator";
 import Table from "sap/m/Table";
 import ListBinding from "sap/ui/model/ListBinding";
 import { FilterBar$ClearEvent } from "sap/ui/comp/filterbar/FilterBar";
 import Control from "sap/ui/core/Control";
+import MultiComboBox from "sap/m/MultiComboBox";
 
 /**
  * @namespace com.logali.employees.controller
@@ -35,9 +35,8 @@ export default class Main extends BaseController {
     private onFilterSearch(): void {
         let oInput = this.byId("filterEmployee") as Input,
             sEmployee = oInput.getValue();
-        let oComoBox = this.byId("filterCountry") as ComboBox,
-            sCountry = oComoBox.getSelectedKey();
-
+        let oMultiComboBox = this.byId("filterCountry") as MultiComboBox,
+            aCountries = oMultiComboBox.getSelectedKeys();
         let aFilter = [];
 
         if (sEmployee) {
@@ -51,11 +50,17 @@ export default class Main extends BaseController {
                 })
             );
         }
-
-        if (sCountry){
-            aFilter.push(new Filter("Country", FilterOperator.EQ, sCountry));
+        if (aCountries.length > 0){
+            aCountries.forEach(function(sKey){
+                aFilter.push(
+                    new Filter("Country", FilterOperator.EQ, sKey)
+                );
+            });
+        } else {
+            const oTable = this.byId("table") as Table;
+            const items = oTable.getBinding("items") as ListBinding;
+            items.filter([]);
         }
-
         const oTable = this.byId("table") as Table;
         const items = oTable.getBinding("items") as ListBinding;
         items.filter(aFilter);
@@ -64,9 +69,9 @@ export default class Main extends BaseController {
     public onClearPress (event : FilterBar$ClearEvent) : void {
         const controls = event.getParameter("selectionSet") as Control[];
         const oInput = controls[0] as Input;
-        const oComoBox = controls[1] as ComboBox;
+        const oMultiComboBox = controls[1] as MultiComboBox;
         oInput.setValue("");
-        oComoBox.setSelectedKey("");
+        oMultiComboBox.setSelectedKeys([]);
         this.onFilterSearch();
     }
 }
