@@ -8,6 +8,9 @@ import ListBinding from "sap/ui/model/ListBinding";
 import { FilterBar$ClearEvent } from "sap/ui/comp/filterbar/FilterBar";
 import Control from "sap/ui/core/Control";
 import MultiComboBox from "sap/m/MultiComboBox";
+import Event from "sap/ui/base/Event";
+import ObjectListItem from "sap/m/ObjectListItem";
+import Context from "sap/ui/model/Context";
 
 /**
  * @namespace com.logali.employees.controller
@@ -16,14 +19,7 @@ export default class Main extends BaseController {
 
     /*eslint-disable @typescript-eslint/no-empty-function*/
     public onInit(): void {
-        this.loadEmployees();
         this.loadCountries();
-    }
-
-    private loadEmployees(): void {
-        const model = new JSONModel();
-        model.loadData("../model/Employees.json");
-        this.setModel(model, "employees");
     }
 
     private loadCountries(): void {
@@ -73,5 +69,17 @@ export default class Main extends BaseController {
         oInput.setValue("");
         oMultiComboBox.setSelectedKeys([]);
         this.onFilterSearch();
+    }
+
+    public onNavToDetails (event : Event) {
+        const item = event.getSource() as ObjectListItem;
+        const bindingContext = item.getBindingContext("employees") as Context;
+        const id = bindingContext.getProperty("EmployeeID");
+        const router = this.getRouter();
+        const viewModel = this.getModel("view") as JSONModel;
+        viewModel.setProperty("/layout", "TwoColumnsMidExpanded");
+        router.navTo("RouteDetails", {
+            id: id
+        });
     }
 }

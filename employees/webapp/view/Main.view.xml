@@ -83,7 +83,7 @@
                                 Formatter: 'com/logali/employees/model/formatter'
                             }"
                             text="{
-                                path: 'i18n>title',
+                                path: 'view>title',
                                 formatter: 'Formatter.titleFormatter.bind($controller)'
                             }"
                             wrapping="true"
@@ -130,7 +130,8 @@
                 </columns>
 
                 <items>
-                    <ColumnListItem>
+                    <ColumnListItem type="Navigation"
+                                    press="onNavToDetails">
                         <cells>
                             <ObjectIdentifier title="{employees>EmployeeID}" />
                             <Text

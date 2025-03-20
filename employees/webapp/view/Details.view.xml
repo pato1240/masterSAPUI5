@@ -1,25 +1,94 @@
-<mvc:View controllerName="com.logali.employees.controller.Details"
+<mvc:View
+    controllerName="com.logali.employees.controller.Details"
     xmlns="sap.m"
     xmlns:uxap="sap.uxap"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
 >
     <uxap:ObjectPageLayout>
-    
         <uxap:headerTitle>
-
             <uxap:ObjectPageDynamicHeaderTitle>
-
                 <uxap:expandedHeading>
-                    <Title text="Details" />
+                    <Title
+                        text="{employees>LastName} {employees>FirstName} ({employees>EmployeeID})"
+                        wrapping="true"
+                    />
                 </uxap:expandedHeading>
 
                 <uxap:expandedContent>
-                    <Text text="Hi everyone" />
+                    <HBox
+                        justifyContent="SpaceBetween"
+                        alignItems="Center"
+                    >
+                        <HBox>
+                            <VBox>
+                                <Label
+                                    text="{i18n>country}:"
+                                    class="boldElement"
+                                />
+                                <Text text="{employees>Country}" />
+                            </VBox>
+                        </HBox>
+                        <HBox>
+                            <VBox>
+                                <Label
+                                    text="{i18n>city}:"
+                                    class="boldElement"
+                                />
+                                <Text text="{employees>City}" />
+                            </VBox>
+                        </HBox>
+                        <HBox>
+                            <VBox>
+                                <Label
+                                    text="{i18n>postalCode}:"
+                                    class="boldElement"
+                                />
+                                <Text text="{employees>PostalCode}" />
+                            </VBox>
+                        </HBox>
+                    </HBox>
                 </uxap:expandedContent>
 
+                <uxap:actions>
+                    <Button
+                        text="{i18n>create}"
+                        tooltip="{i18n>create}"
+                        press="onCreatePress"
+                        type="Emphasized"
+                        width="6rem"
+                    />
+                    <Button
+                        icon="sap-icon://decline"
+                        press="onClosePress"
+                        type="Reject"
+                    />
+                </uxap:actions>
             </uxap:ObjectPageDynamicHeaderTitle>
-
         </uxap:headerTitle>
 
+        <uxap:sections>
+            <uxap:ObjectPageSection>
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection title="{i18n>incidences}">
+                        <uxap:blocks>
+                            <Panel id="tableIncidence" />
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection title="{i18n>orders}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <core:Fragment
+                                fragmentName="com.logali.employees.fragment.Orders"
+                                type="XML"/>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+        </uxap:sections>
     </uxap:ObjectPageLayout>
 </mvc:View>

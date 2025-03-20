@@ -82,7 +82,7 @@
                 },
                 {
                     "name": "RouteDetails",
-                    "pattern": "Employee(ID):?query:",
+                    "pattern": "Employee(ID={id})",
                     "target": [
                         "TargetMain",
                         "TargetDetail"
