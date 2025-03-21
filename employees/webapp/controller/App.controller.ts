@@ -16,7 +16,7 @@ export default class App extends BaseController {
     private viewModel(): void {
         const data = {
             layout: "OneColumn",
-            title: ""
+            title: "test"
         };
         const model = new JSONModel(data);
         this.setModel(model, "view");
