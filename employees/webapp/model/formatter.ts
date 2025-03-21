@@ -14,6 +14,7 @@ export default {
             return resourceBundle.getText("title", [0])
         }
         console.log(oBinding);
+        console.log(oBinding.getLength());
         const newTitle = resourceBundle.getText("title",[oBinding.getLength()]);
 
         oBinding.attachChange( () => {

@@ -73,7 +73,7 @@ export default class Main extends BaseController {
 
     public onNavToDetails (event : Event) {
         const item = event.getSource() as ObjectListItem;
-        const bindingContext = item.getBindingContext("employees") as Context;
+        const bindingContext = item.getBindingContext("northwind") as Context;
         const id = bindingContext.getProperty("EmployeeID");
         const router = this.getRouter();
         const viewModel = this.getModel("view") as JSONModel;

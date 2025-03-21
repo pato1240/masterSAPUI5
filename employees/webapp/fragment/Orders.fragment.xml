@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core"
 >
     <Table
-        items="{employees>Orders}"
+        items="{northwind>Orders}"
         growing="true"
     >
         <columns>
@@ -23,9 +23,9 @@
         <items>
             <ColumnListItem>
                 <cells>
-                    <Text text="{employees>OrderID}" />
-                    <Text text="{employees>Freight}" />
-                    <Text text="{employees>ShipAddress}" />
+                    <Text text="{northwind>OrderID}" />
+                    <Text text="{northwind>Freight}" />
+                    <Text text="{northwind>ShipAddress}" />
                 </cells>
             </ColumnListItem>
         </items>

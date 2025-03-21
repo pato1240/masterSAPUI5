@@ -10,7 +10,7 @@ export default class App extends BaseController {
     /*eslint-disable @typescript-eslint/no-empty-function*/
     public onInit(): void {
         this.viewModel();
-        this.loadEmployees();
+        //this.loadEmployees();
     }
 
     private viewModel(): void {
