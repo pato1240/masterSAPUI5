@@ -16,6 +16,15 @@
                     text="{i18n>incidence} ({form>Index})"
                     wrapping="true"
                 />
+                <ToolbarSpacer/>
+                <Button 
+                        icon="sap-icon://save"
+                        press="onSavePress"
+                        type="Emphasized" />
+                <Button 
+                        icon="sap-icon://delete"
+                        press="onDeletePress"
+                        type="Reject" />
             </Toolbar>
         </headerToolbar>
 

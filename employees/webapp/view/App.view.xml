@@ -10,7 +10,8 @@
                 <mvc:XMLView viewName="com.logali.employees.view.Container"
                              type="XML"/>
             </pages>
-        </App >
+            
+        </App>
     </Shell>
 
 </mvc:View>

@@ -15,13 +15,10 @@ export default {
         }
 
         const newTitle = resourceBundle.getText("title",[oBinding.getLength()]);
-        console.log(newTitle);
 
         oBinding.attachChange( () => {
             let viewModel = this.getView()?.getModel("view") as JSONModel;
             viewModel.setProperty("/title", resourceBundle.getText("title",[oBinding.getLength()]));
-            const modelChanged = viewModel.getProperty("/title");
-            console.log(modelChanged);
         });
 
         return newTitle;
