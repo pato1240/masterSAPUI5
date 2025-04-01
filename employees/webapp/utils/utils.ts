@@ -5,6 +5,7 @@ import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageBox from "sap/m/MessageBox";
+import ODataListBinding from "sap/ui/model/odata/v2/ODataListBinding";
 
 /**
  * @namespace com.logali.employees.utils
@@ -30,7 +31,7 @@ export default class Utils {
         const $this = this;
 
         MessageBox.confirm(resourceBundle.getText("question")||'No text defined', {
-            action: [
+            actions: [
                 MessageBox.Action.OK,
                 MessageBox.Action.CANCEL
             ],
@@ -38,12 +39,32 @@ export default class Utils {
             onClose: async function (sAction : string) {
                 if (sAction === MessageBox.Action.OK) {
                     switch(action){
-                        case 'create': await $this._create(object);
-                        case 'update': await $this._update();
-                        case 'delete': await $this._delete();
+                        case 'create': await $this._create(object);break;
+                        case 'update': await $this._update(object);break;
+                        case 'delete': await $this._delete(object);break;
                     }
                 }
             }
+        });
+    }
+
+    public async read (object?: JSONModel) : Promise<void|ODataListBinding> {
+        const model = this.model;
+        const path = object?.getProperty("/path");
+        const filters = object?.getProperty("/filters");
+        const resourceBundle = this.resourceBundle;
+
+        return new Promise ((resolve,reject)=>{
+            model.read(path, {
+                filters: filters,
+                success: function (data: ODataListBinding) {
+                    resolve(data); //return
+                },
+                error: function () {
+                    reject();
+                }
+            });
+
         });
     }
 
@@ -64,12 +85,36 @@ export default class Utils {
 
     }
 
-    private async _update () : Promise<void> {
+    private async _update (object?: JSONModel) : Promise<void> {
+        const model = this.model;
+        const path = object?.getProperty("/path");
+        const data = object?.getProperty("/data");
+        const resourceBundle = this.resourceBundle;
+
+        model.update(path, data, {
+            success: function() {
+                MessageBox.success(resourceBundle.getText("success")||'No text defined');
+            },
+            error: function() {
+                MessageBox.error(resourceBundle.getText("error")||'No text defined');
+            }
+        });
         
     }
 
-    private async _delete () : Promise<void> {
-        
+    private async _delete (object?: JSONModel) : Promise<void> {
+        const model = this.model;
+        const path = object?.getProperty("/path");
+        const resourceBundle = this.resourceBundle;
+
+        model.remove(path, {
+            success: function() {
+                MessageBox.success(resourceBundle.getText("success")||'No text defined');
+            },
+            error: function() {
+                MessageBox.error(resourceBundle.getText("error")||'No text defined');
+            }
+        }); 
     }
 
 }

@@ -80,7 +80,9 @@
       "zservice": {
         "dataSource": "YSAPUI5_SRV_01",
         "preload": true,
-        "settings": {}
+        "settings": {
+          "defaultUpdateMethod": "PUT"
+        }
       }
     },
     "resources": {
