@@ -14,6 +14,12 @@ import Toolbar from "sap/m/Toolbar";
 import { DatePicker$ChangeEvent } from "sap/m/DatePicker";
 import { Input$LiveChangeEvent } from "sap/m/Input";
 import { Select$ChangeEvent } from "sap/m/Select";
+import MessageBox from "sap/m/MessageBox";
+import UIComponent from "sap/ui/core/UIComponent";
+import ResourceModel from "sap/ui/model/resource/ResourceModel";
+import ResourceBundle from "sap/base/i18n/ResourceBundle";
+import ObjectListItem from "sap/m/ObjectListItem";
+import Event from "sap/ui/base/Event";
 
 /**
  * @namespace com.logali.employees.controller
@@ -68,7 +74,7 @@ export default class Details extends BaseController {
         const formModel = this.getModel("form") as JSONModel;
         const aData = formModel.getData();
         const index = aData.length;
-        aData.push({ Index: index + 1 });
+        aData.push({ Index: index + 1, _ValidateDate: false, EnabledSave: false });
         formModel.refresh();
 
         this.panel = await <Promise<Panel>>this.loadFragment({
@@ -93,26 +99,34 @@ export default class Details extends BaseController {
 
         const utils = new Utils(this);
         const northwind = this.getView()?.getBindingContext("northwind");
+        let employeeId = (northwind?.getProperty("EmployeeID") as Number).toString();
+        let sapId = utils.getSapId();
 
         if (typeof bindingContext.getProperty("IncidenceId") === 'undefined') {
             //Creamos registro
+
             let object = {
                 path: '/IncidentsSet',
                 data: {
-                    SapId: utils.getSapId(),
-                    EmployeeId: (northwind?.getProperty("EmployeeID") as Number).toString(),
+                    SapId: sapId,
+                    EmployeeId: employeeId,
                     CreationDate: bindingContext.getProperty("CreationDate"),
                     Type: bindingContext.getProperty("Type"),
                     Reason: bindingContext.getProperty("Reason")
-                }
+                },
+                filters: [
+                    new Filter("SapId", FilterOperator.EQ, sapId),
+                    new Filter("EmployeeId", FilterOperator.EQ, employeeId)
+                ]
             };
-            await utils.crud('create', new JSONModel(object));
+
+            const results = await utils.crud('create', new JSONModel(object));
+            this.showIncidences(results);
+
         } else {
             //Actualizamos registro
-            const incidenceId = bindingContext.getProperty("IncidenceId");
-            const sapId = utils.getSapId();
-            const employeeId = (northwind?.getProperty("EmployeeID") as number).toString(); 
 
+            const incidenceId = bindingContext.getProperty("IncidenceId");
             const object = {
                 path: `/IncidentsSet(IncidenceId='${incidenceId}',SapId='${sapId}',EmployeeId='${employeeId}')`,
                 data: {
@@ -124,9 +138,14 @@ export default class Details extends BaseController {
                     TypeX: bindingContext.getProperty("TypeX"),
                     Reason: bindingContext.getProperty("Reason"),
                     ReasonX: bindingContext.getProperty("ReasonX")
-                }
+                },
+                filters: [
+                    new Filter("SapId", FilterOperator.EQ, sapId),
+                    new Filter("EmployeeId", FilterOperator.EQ, employeeId)
+                ]
             }
-            await utils.crud('update', new JSONModel(object));
+            const results = await utils.crud('update', new JSONModel(object));
+            this.showIncidences(results);
         }
     }
 
@@ -145,29 +164,10 @@ export default class Details extends BaseController {
         };
         const results = await utils.read(new JSONModel(object));
         this.showIncidences(results);
-
     }
 
-    private showIncidences(results: ODataListBinding | void) {
-        //Limpiar incidencias
-        const panel = this.byId("tableIncidence") as Panel;
-        panel.removeAllContent();
+    public async onDeletePress(event: Button$PressEvent): Promise<void> {
 
-        //Setear el tipo de dato
-        const array = results as any;
-        const formModel = this.getModel("form") as JSONModel;
-        formModel.setData(array.results);
-
-        //Hacer el mapeo
-        array.results.forEach(async (incidence: object, index: number) => {
-            const newIncidence = await <Promise<Panel>>this.loadFragment({ name: "com.logali.employees.fragment.NewIncidence" });
-            newIncidence.bindElement("form>/" + index);
-            panel.addContent(newIncidence);
-        });
-
-    }
-
-    public async onDeletePress (event: Button$PressEvent) : Promise<void> {
         const button = event.getSource() as Button;
         const toolbar = button.getParent() as Toolbar;
         const panel = toolbar.getParent() as Panel;
@@ -179,28 +179,112 @@ export default class Details extends BaseController {
         const employeeId = form?.getProperty("EmployeeId");
 
         let object = {
-            path: `/IncidentsSet(IncidenceId='${incidenceId}',SapId='${sapId}',EmployeeId='${employeeId}')`
+            path: `/IncidentsSet(IncidenceId='${incidenceId}',SapId='${sapId}',EmployeeId='${employeeId}')`,
+            filters: [
+                new Filter("SapId", FilterOperator.EQ, sapId),
+                new Filter("EmployeeId", FilterOperator.EQ, employeeId)
+            ]
         };
 
         const utils = new Utils(this);
-        await utils.crud('delete', new JSONModel(object));
+        const results = await utils.crud('delete', new JSONModel(object));
+        this.showIncidences(results);
+    }
+
+    private showIncidences(results: ODataListBinding | void) {
+        //Limpiar incidencias
+        const panel = this.byId("tableIncidence") as Panel;
+        panel.removeAllContent();
+
+        //Setear el tipo de dato
+        const array = results as any;
+        const formModel = this.getModel("form") as JSONModel;
+        formModel.setData(array.results);
+        formModel.getData().push({ _ValidateDate: true, EnabledSave: false });
+        formModel.refresh();
+
+        //Hacer el mapeo
+        array.results.forEach(async (incidence: object, index: number) => {
+            const newIncidence = await <Promise<Panel>>this.loadFragment({ name: "com.logali.employees.fragment.NewIncidence" });
+            newIncidence.bindElement("form>/" + index);
+            panel.addContent(newIncidence);
+        });
+
     }
 
     public updateIncidenceDate(event: DatePicker$ChangeEvent): void {
+        const resourceBundle = ((this.getOwnerComponent() as UIComponent).getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
         const context = event.getSource().getBindingContext("form") as Context;
         let object = context.getObject() as any;
-        object.CreationDateX = true;
+
+        if (!event.getSource().isValidValue()) {
+            object._ValidateDate = false;
+            object.DateState = "Error";
+            MessageBox.error(resourceBundle.getText("invalidDate")||'No text defined');
+        } else {
+            object._ValidateDate = true;
+            object.DateState = "None"
+            object.CreationDateX = true;
+        };
+
+        if(event.getSource().getValue() && event.getSource().isValidValue() && object.Reason){
+            object.EnabledSave = true;
+        } else {
+            object.EnabledSave = false;
+        };
+
+        context.getModel().refresh();
     }
 
     public updateIncidenceReason(event: Input$LiveChangeEvent): void {
         const context = event.getSource().getBindingContext("form") as Context;
         let object = context.getObject() as any;
-        object.ReasonX = true;
+
+        if (!event.getSource().getValue()) {
+            object.ReasonState = "Error"
+        } else {
+            object.ReasonState = "None"
+            object.ReasonX = true;
+        }
+
+        if(event.getSource().getValue() && object._ValidateDate){
+            object.EnabledSave = true;
+        }else{
+            object.EnabledSave = false;
+        };
+
+        context.getModel().refresh();
     }
 
     public updateIncidenceType(event: Select$ChangeEvent): void {
         const context = event.getSource().getBindingContext("form") as Context;
         let object = context.getObject() as any;
         object.TypeX = true;
+
+        if(object.Reason && object._ValidateDate){
+            object.EnabledSave = true;
+        }else{
+            object.EnabledSave = false;
+        };
+
+        context.getModel().refresh();
+    }
+
+    public onNavToOrderDetails(event: Event): void {
+        const item = event.getSource() as ObjectListItem;
+        const bindingContext = item.getBindingContext("northwind") as Context;
+        const sEmployeeId = bindingContext.getProperty("EmployeeID").toString();
+        const sOrderId = bindingContext.getProperty("OrderID").toString();
+
+        // console.log(bindingContext.getPath());
+
+        const viewModel = this.getModel("view") as JSONModel;
+        viewModel.setProperty("/layout", "EndColumnFullScreen");
+
+        const router = this.getRouter();
+        router.navTo("RouteOrderDetails",{
+            employeeId: sEmployeeId,
+            orderId: sOrderId
+        })
     }
 }

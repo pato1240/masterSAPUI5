@@ -17,10 +17,19 @@
         </f:beginColumnPages>
 
         <f:midColumnPages>
-            <mvc:XMLView id="details"
-                            viewName="com.logali.employees.view.Details"
-                            type="XML" />
-        
+            <mvc:XMLView
+                id="details"
+                viewName="com.logali.employees.view.Details"
+                type="XML"
+            />
         </f:midColumnPages>
+
+        <f:endColumnPages>
+            <mvc:View
+                id="orderDetails"
+                viewName="com.logali.employees.view.OrderDetails"
+                type="XML"
+            />
+        </f:endColumnPages>
     </f:FlexibleColumnLayout>
 </mvc:View>

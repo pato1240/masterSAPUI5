@@ -1,0 +1,113 @@
+<mvc:View
+    controllerName="com.logali.employees.controller.OrderDetails"
+    xmlns="sap.m"
+    xmlns:uxap="sap.uxap"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:signature="com.logali.employees.control"
+>
+    <uxap:ObjectPageLayout>
+        <uxap:headerTitle>
+            <uxap:ObjectPageDynamicHeaderTitle>
+            
+                <uxap:expandedHeading>
+                    <HBox>
+                        <Title
+                            text="{i18n>customerID}: {northwind>CustomerID}"/>
+                    </HBox>
+                </uxap:expandedHeading>
+
+                <uxap:snappedHeading>
+                    <HBox>
+                        <Title
+                            text="{i18n>customerID}: {northwind>CustomerID}" />
+                    </HBox>
+                </uxap:snappedHeading>
+
+                <uxap:expandedContent>
+                    <Text text="{i18n>orderID}: {northwind>OrderID}" />
+                </uxap:expandedContent>
+
+                <uxap:snappedContent>
+                    <Text text="{i18n>orderID}: {northwind>OrderID}" />
+                </uxap:snappedContent>
+
+                <uxap:navigationActions>
+                    <Button icon="sap-icon://decline"
+                            type="Reject" 
+                            press="onNavBackToDetails"/>
+                </uxap:navigationActions>
+
+            </uxap:ObjectPageDynamicHeaderTitle>
+        </uxap:headerTitle>
+
+        <uxap:headerContent>
+            <FlexBox justifyContent="SpaceBetween">
+                <HBox class="sapUiSmallMarginEnd">
+                    <VBox>
+                        <Label text="{i18n>orderDate}: " class="boldElement"/>
+                        <Text text="{
+                                path: 'northwind>OrderDate',
+                                type: 'sap.ui.model.type.Date'
+                                }"/>
+                    </VBox>
+                </HBox>
+                <HBox>
+                    <VBox>
+                        <Label text="{i18n>freight}: " class="boldElement"/>
+                        <Text text="{northwind>Freight}"/>
+                    </VBox>
+                </HBox>
+                <HBox class="sapUiSmallMarginEnd">
+                    <VBox>
+                        <Label text="{i18n>shipName}: " class="boldElement"/>
+                        <Text text="{northwind>ShipName}"/>
+                    </VBox>
+                </HBox>
+            </FlexBox>
+        </uxap:headerContent>
+
+        <uxap:sections>
+            <uxap:ObjectPageSection title="{i18n>signatureTitle}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <FlexBox width="100%"
+                                    alignItems="Center"
+                                    justifyContent="Center"
+                                    direction="Column">
+
+                                <FlexBox width="300px"
+                                        height="150px" >
+                                    <signature:SignaturePad id="signarutePad"/>
+                                </FlexBox>
+
+                                <HBox class="sapUiTinyMarginTop"
+                                        justifyContent="Center"
+                                        width="302px">
+                                    
+                                    <Button class="sapUiSmallMarginEnd"
+                                            text="{i18n>save}"
+                                            type="Accept"
+                                            press="onSavePress"
+                                            width="4rem"/>
+
+                                    <Button class="sapUiSmallMarginEnd"
+                                            text="{i18n>clear}"
+                                            type="Reject"
+                                            press="onClearPress"
+                                            width="4rem"/>
+
+                                    <Button class="sapUiSmallMarginEnd"
+                                            text="{i18n>refresh}"
+                                            type="Emphasized"
+                                            press="onClearPress"
+                                            width="4rem"/>         
+                                </HBox>
+                            </FlexBox>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
+</mvc:View>

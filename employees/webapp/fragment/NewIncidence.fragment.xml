@@ -20,7 +20,8 @@
                 <Button 
                         icon="sap-icon://save"
                         press="onSavePress"
-                        type="Emphasized" />
+                        type="Emphasized"
+                        enabled="{= ${form>EnabledSave} === true}" />
                 <Button 
                         icon="sap-icon://delete"
                         press="onDeletePress"
@@ -31,14 +32,16 @@
         <content>
             <HBox>
                 <VBox class="sapUiSmallMarginEnd">
-                    <Text text="{i18n>date}:" />
+                    <Label text="{i18n>date}:" required="true" />
                     <DatePicker dateValue="{form>CreationDate}"
-                                change="updateIncidenceDate" />
+                                change="updateIncidenceDate"
+                                valueState="{form>DateState}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginEnd">
-                    <Text text="{i18n>reason}:" />
+                    <Label text="{i18n>reason}:" required="true"/>
                     <Input value="{form>Reason}"
-                            change="updateIncidenceReason" />
+                            change="updateIncidenceReason"
+                            valueState="{form>ReasonState}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginEnd">
                     <Text text="{i18n>type}:" />

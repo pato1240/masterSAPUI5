@@ -18,6 +18,7 @@
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@ui5/cli": "^3.0.0",
+    "@ui5/ts-interface-generator": "^0.10.0",
     "eslint": "8.57.0",
     "eslint-plugin-fiori-custom": "2.6.7",
     "typescript": "^5.1.6",
@@ -41,5 +42,9 @@
     "build:cf": "ui5 build preload --clean-dest --config ui5-deploy.yaml --include-task=generateCachebusterInfo",
     "start-mock": "fiori run --config ./ui5-mock.yaml --open \"test/flpSandbox.html?sap-ui-xx-viewCache=false#comlogaliemployees-display\""
   },
-  "sapuxLayer": "CUSTOMER_BASE"
+  "sapuxLayer": "CUSTOMER_BASE",
+  "dependencies": {
+    "signature_pad": "^5.0.7",
+    "ui5-tooling-modules": "^3.24.14"
+  }
 }

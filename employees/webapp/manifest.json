@@ -101,8 +101,7 @@
         "type": "View",
         "viewType": "XML",
         "path": "com.logali.employees.view",
-        "async": true,
-        "viewPath": "com.logali.employees.view"
+        "async": true
       },
       "routes": [
         {
@@ -114,10 +113,19 @@
         },
         {
           "name": "RouteDetails",
-          "pattern": "Employee({id})",
+          "pattern": "Employee({id}):?query:",
           "target": [
             "TargetMain",
             "TargetDetail"
+          ]
+        },
+        {
+          "name": "RouteOrderDetails",
+          "pattern": "Employee(ID={employeeId})/OrderID(ID={orderId}):?query:",
+          "target": [
+            "TargetMain",
+            "TargetDetail",
+            "TargetOrderDetails"
           ]
         }
       ],
@@ -136,6 +144,12 @@
           "controlId": "container",
           "controlAggregation": "midColumnPages",
           "name": "Details"
+        },
+        "TargetOrderDetails": {
+          "parent": "TargetContainer",
+          "controlId": "container",
+          "controlAggregation": "endColumnPages",
+          "name": "OrderDetails"
         }
       }
     },
