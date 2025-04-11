@@ -172,23 +172,26 @@ export default class Details extends BaseController {
         const toolbar = button.getParent() as Toolbar;
         const panel = toolbar.getParent() as Panel;
 
-        const form = panel.getBindingContext("form");
+        const form = panel.getBindingContext("form") as Context;
 
         const incidenceId = form?.getProperty("IncidenceId");
         const sapId = form?.getProperty("SapId");
         const employeeId = form?.getProperty("EmployeeId");
 
-        let object = {
-            path: `/IncidentsSet(IncidenceId='${incidenceId}',SapId='${sapId}',EmployeeId='${employeeId}')`,
-            filters: [
-                new Filter("SapId", FilterOperator.EQ, sapId),
-                new Filter("EmployeeId", FilterOperator.EQ, employeeId)
-            ]
+        if (typeof incidenceId === "undefined") {
+            panel.destroy()
+        } else {
+            let object = {
+                path: `/IncidentsSet(IncidenceId='${incidenceId}',SapId='${sapId}',EmployeeId='${employeeId}')`,
+                filters: [
+                    new Filter("SapId", FilterOperator.EQ, sapId),
+                    new Filter("EmployeeId", FilterOperator.EQ, employeeId)
+                ]
+            }
+            const utils = new Utils(this);
+            const results = await utils.crud('delete', new JSONModel(object));
+            this.showIncidences(results);
         };
-
-        const utils = new Utils(this);
-        const results = await utils.crud('delete', new JSONModel(object));
-        this.showIncidences(results);
     }
 
     private showIncidences(results: ODataListBinding | void) {
@@ -200,8 +203,6 @@ export default class Details extends BaseController {
         const array = results as any;
         const formModel = this.getModel("form") as JSONModel;
         formModel.setData(array.results);
-        formModel.getData().push({ _ValidateDate: true, EnabledSave: false });
-        formModel.refresh();
 
         //Hacer el mapeo
         array.results.forEach(async (incidence: object, index: number) => {
@@ -209,7 +210,6 @@ export default class Details extends BaseController {
             newIncidence.bindElement("form>/" + index);
             panel.addContent(newIncidence);
         });
-
     }
 
     public updateIncidenceDate(event: DatePicker$ChangeEvent): void {
@@ -220,14 +220,14 @@ export default class Details extends BaseController {
         if (!event.getSource().isValidValue()) {
             object._ValidateDate = false;
             object.DateState = "Error";
-            MessageBox.error(resourceBundle.getText("invalidDate")||'No text defined');
+            MessageBox.error(resourceBundle.getText("invalidDate") || 'No text defined');
         } else {
             object._ValidateDate = true;
             object.DateState = "None"
             object.CreationDateX = true;
         };
 
-        if(event.getSource().getValue() && event.getSource().isValidValue() && object.Reason){
+        if (event.getSource().getValue() && event.getSource().isValidValue() && object.Reason) {
             object.EnabledSave = true;
         } else {
             object.EnabledSave = false;
@@ -247,9 +247,9 @@ export default class Details extends BaseController {
             object.ReasonX = true;
         }
 
-        if(event.getSource().getValue() && object._ValidateDate){
+        if (event.getSource().getValue()) {
             object.EnabledSave = true;
-        }else{
+        } else {
             object.EnabledSave = false;
         };
 
@@ -261,9 +261,9 @@ export default class Details extends BaseController {
         let object = context.getObject() as any;
         object.TypeX = true;
 
-        if(object.Reason && object._ValidateDate){
+        if (object.Reason) {
             object.EnabledSave = true;
-        }else{
+        } else {
             object.EnabledSave = false;
         };
 
@@ -282,7 +282,7 @@ export default class Details extends BaseController {
         viewModel.setProperty("/layout", "EndColumnFullScreen");
 
         const router = this.getRouter();
-        router.navTo("RouteOrderDetails",{
+        router.navTo("RouteOrderDetails", {
             employeeId: sEmployeeId,
             orderId: sOrderId
         })
